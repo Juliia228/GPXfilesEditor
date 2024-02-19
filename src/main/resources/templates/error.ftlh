@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>GPX editor</title>
+    <style>
+        html {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+        h3 {
+          color: red;
+        }
+    </style>
+</head>
+<body>
+<h2>Edit your GPX files here!</h2>
+<h3>Кажется что-то пошло не так :(</h3>
+</body>
+</html>
