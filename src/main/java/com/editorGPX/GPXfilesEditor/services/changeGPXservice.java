@@ -9,7 +9,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
-public class GPXservice {
+public class changeGPXservice {
     private final static int TYPE_GPX = 1;
     private final static int TYPE_METADATA = 2;
     private final static int TYPE_WAYPOINT = 3;
@@ -19,120 +19,36 @@ public class GPXservice {
     private final static int TYPE_TRACK_SEGMENT = 7;
     private final static int TYPE_TRACK_SEG_POINT = 8;
 
-    public void GPXtoConsole(GPX gpx) throws Exception {
-        if (gpx == null) {
-            throw new Exception("Wrong GPX file");
-        }
-        boolean hasNext = true;
-        int level = 0;
-        System.out.println("\n Your GPX file:");
-        System.out.println("Version: " + gpx.getVersion());
-        System.out.println("Creator: " + gpx.getCreator());
-        if (gpx.getMetadata().isPresent()) {
-            System.out.println("Metadata: ");
-            printMetadata(gpx.getMetadata().get(), countStrLineLevel(++level));
-        }
-        while (hasNext) {
-            hasNext = false;
-            if (gpx.getWayPoints() != null) {
-                level++;
-            }
-        }
-        if (gpx.getExtensions().isPresent()) {
-            System.out.println("Extensions: " + gpx.getExtensions().get());
-        }
-    }
+    public GPX insertExtensions(GPX gpx, int type, int globalIndex, int index, int trk_seg_wp_index, String tagName, String tagData) throws Exception {
+        // для примера!
+//        Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+//        Element extElement = doc.createElement("extensions");
+//        Element requestElement = doc.createElement("ExampleExtensions");
+//        requestElement.appendChild(doc.createTextNode("It is content"));
+//        requestElement.setAttribute("id", "12374748");
+//        extElement.appendChild(requestElement);
+//        doc.appendChild(extElement);
 
-    private String countStrLineLevel(int level) {
-        String lineLevel = "";
-        while (level != 0) {
-            lineLevel += " ";
-            level--;
-        }
-        return lineLevel;
-    }
-
-    private void printMetadata(Metadata metadata, String lineLevel) {
-        printIfExist(lineLevel + "Name: ", metadata.getName().isPresent() ? metadata.getName().get() : false);
-        printIfExist(lineLevel + "Description: ", metadata.getDescription().isPresent() ? metadata.getDescription().get() : false);
-        printIfExist(lineLevel + "Author: ", metadata.getAuthor().isPresent() ? metadata.getAuthor().get() : false);
-        printIfExist(lineLevel + "Copyright: ", metadata.getCopyright().isPresent() ? metadata.getCopyright().get() : false);
-
-        // протестить как выводится links и сделать для них вывод
-        printIfExist(lineLevel + "Links: ", !metadata.getLinks().isEmpty() ? metadata.getLinks() : false);
-        // сделать вывод links
-
-        printIfExist(lineLevel + "Time: ", metadata.getTime().isPresent() ? metadata.getTime().get() : false);
-        printIfExist(lineLevel + "Keywords: ", metadata.getKeywords().isPresent() ? metadata.getKeywords().get() : false);
-        printIfExist(lineLevel + "Bounds: ", metadata.getBounds().isPresent() ? metadata.getBounds().get() : false);
-        if (metadata.getExtensions().isPresent()) {
-            printExtensions(metadata.getExtensions().get(), lineLevel);
-        }
-    }
-
-    private void printExtensions(Document extensions, String lineLevel) {
-        System.out.println(lineLevel + "Extensions:");
-
-    }
-
-    //    private void printByTag(GPX gpx, Metadata metadata, String tag, int level) {
-//        String levelLine = "";
-//        while (level != 0) {
-//            levelLine += " ";
-//            level--;
-//        }
-//        System.out.println(levelLine + tag + ":");
-//        switch (tag) {
-//            case "Metadata":
-//                printIfExist(metadata.getName().isPresent(), levelLine + "Name: ", metadata.getName());
-//                printIfExist(metadata.getDescription().isPresent(), levelLine + "Description: ", metadata.getDescription());
-//                printIfExist(metadata.getAuthor().isPresent(), levelLine + "Author: ", metadata.getAuthor());
-//                printIfExist(metadata.getCopyright().isPresent(), levelLine + "Copyright: ", metadata.getCopyright());
-//
-//                printIfExist(!metadata.getLinks().isEmpty(), levelLine + "Links: ", metadata.getLinks());
-//
-//                printIfExist(metadata.getTime().isPresent(), levelLine + "Time: ", metadata.getTime());
-//                printIfExist(metadata.getKeywords().isPresent(), levelLine + "Keywords: ", metadata.getKeywords());
-//                printIfExist(metadata.getBounds().isPresent(), levelLine + "Bounds: ", metadata.getBounds());
-//
-//                printIfExist(metadata.getName().isPresent(), levelLine + "Name: ", metadata.getName());
-//                break;
-//            case "Extensions":
-//                //
-//                break;
-//            case "":
-//                //
-//                break;
-//            default:
-//                System.out.println("Тег не может быть выведен");
-//        }
-//    }
-    private void printIfExist(String tag, Object printedObject) {
-        if (!printedObject.equals(false)) {
-            System.out.println(tag + printedObject);
-        }
-    }
-
-    public GPX insertExtensions(GPX gpx, int type, int globalIndex, int index, int trk_seg_wp_index) throws Exception {
-        // для примера!!!!!!!!!!!!!!!!!!!
         Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
         Element extElement = doc.createElement("extensions");
-        Element requestElement = doc.createElement("ExampleExtensions");
-        requestElement.appendChild(doc.createTextNode("It is content"));
-        requestElement.setAttribute("id", "12374748");
-        extElement.appendChild(requestElement);
+        extElement.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
+        extElement.setAttribute("xsi:schemaLocation", "schemas/simpleSchema.xsd");
+        Element dataElement = doc.createElement(tagName);
+        dataElement.appendChild(doc.createTextNode(tagData));
+        extElement.appendChild(dataElement);
         doc.appendChild(extElement);
-        ///////////////////////////////////////////////////////////////////////////
 
         switch (type) {
-            case TYPE_GPX -> gpx = gpx.toBuilder()
-                    .extensions(doc)
-                    .build();
+            case TYPE_GPX -> {
+                return gpx.toBuilder()
+                        .extensions(doc)
+                        .build();
+            }
 
             case TYPE_METADATA -> {
                 Metadata md = gpx.getMetadata().isPresent() ? gpx.toBuilder().metadata().get() : null;
                 if (md != null) {
-                    gpx = gpx.toBuilder()
+                    return gpx.toBuilder()
                             .metadata(md
                                     .toBuilder()
                                     .extensions(doc).build())
@@ -143,9 +59,9 @@ public class GPXservice {
             }
 
             case TYPE_WAYPOINT -> {
-                if (gpx.getWayPoints().size() >= 1 && gpx.getWayPoints().size() > index) {
-                    WayPoint wayPoint = gpx.getWayPoints().get(index);
-                    gpx = gpx.toBuilder()
+                if (gpx.getWayPoints().size() >= 1 && gpx.getWayPoints().size() > globalIndex) {
+                    WayPoint wayPoint = gpx.getWayPoints().get(globalIndex);
+                    return gpx.toBuilder()
                             .wayPointFilter()
                             .map(wp -> {
                                 if (wp.equals(wayPoint)) {
