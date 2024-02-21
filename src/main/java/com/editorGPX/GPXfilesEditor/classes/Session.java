@@ -9,37 +9,35 @@ import java.nio.file.Path;
 
 @Data
 public class Session {
-    private String fileName;
-    private String fullPath;
-    private String pathChangedFile;
+    private String fileName; // название исходного созданного файла
+    private String pathLastChangedFile; // полный путь до файла с последними изменениями
     private GPX gpx;
+    private int changeCount; // количество изменений файла
 
     public Session() {
         fileName = "";
-        fullPath = "";
-        pathChangedFile = "";
+        pathLastChangedFile = "";
         gpx = GPX.builder().build();
+        changeCount = 0;
     }
 
     public Session(String fileName) throws IOException {
         this.fileName = fileName;
-        pathChangedFile = "";
+        pathLastChangedFile = "";
         try {
-            this.fullPath = MainController.PATH_TO_DIR + fileName;
-            gpx = GPX.read(Path.of(this.fullPath));
+            gpx = GPX.read(Path.of(MainController.PATH_TO_DIR + fileName + ".gpx"));
             MainController.log.info("Файл успешно загружен");
         } catch (IOException e) {
-            this.fullPath = "";
             gpx = GPX.builder().build();
             throw new IOException(e.getMessage());
         }
     }
 
-    public void setGpx(GPX gpx) throws IOException {
+    public String setGpx(GPX gpx) throws IOException {
         this.gpx = gpx;
-        if (pathChangedFile.equals("")) {
-            pathChangedFile = MainController.PATH_TO_DIR + "changed_" + fileName;
-        }
-        GPX.write(gpx, Path.of(pathChangedFile));
+        changeCount++;
+        pathLastChangedFile = MainController.PATH_TO_DIR + fileName + "_v" + changeCount + ".gpx";
+        GPX.write(gpx, Path.of(pathLastChangedFile));
+        return fileName + "_v" + changeCount + ".gpx"; // название измененного файла
     }
 }
