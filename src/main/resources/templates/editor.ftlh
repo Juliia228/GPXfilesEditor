@@ -27,6 +27,7 @@
     </ul>
     <label for="tag">Введите число: </label>
     <input type="number" name="tag" id="tag"><br />
+
     <h4>Два параметра ниже нужно указывать, только если вы попадаете под описанные условия</h4>
     <label for="tagLevel1">Если вы хотите добавить extensions <b>не</b> в теги <i>gpx</i> или <i>metadata</i>, то<br />введите порядковый номер выбранного элемента относительно его родительского тега: </label>
     <input type="number" name="tagLevel1" id="tagLevel1"><br /><br />
@@ -34,7 +35,13 @@
     <input type="number" name="tagLevel2" id="tagLevel2"><br /><br />
     <label for="trk_seg_point">Для <i>track segment point</i> также укажите его порядковый номер в родительском track segment: </label>
     <input type="number" name="trk_seg_point" id="trk_seg_point"><br />
-    <h3>Введите extensions</h3>
+
+    <h3>Введите extensions:</h3>
+    <label for="tagName">Имя тега: </label>
+    <input type="text" name="tagName" id="tagName"><br /><br />
+    <label for="tagData">Данные: </label>
+    <input type="text" name="tagData" id="tagData"><br /><br />
+
     <input type="submit" value="Добавить extensions">
 </form>
 </body>
