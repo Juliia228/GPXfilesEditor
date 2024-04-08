@@ -20,8 +20,8 @@ public class GPXfilesEditorApplication {
 	@Bean
 	MultipartConfigElement multipartConfigElement() {
 		MultipartConfigFactory factory = new MultipartConfigFactory();
-		factory.setMaxFileSize(DataSize.parse("128KB"));
-		factory.setMaxRequestSize(DataSize.parse("128KB"));
+		factory.setMaxFileSize(DataSize.parse("1MB"));
+		factory.setMaxRequestSize(DataSize.parse("1MB"));
 		return factory.createMultipartConfig();
 	}
 }
