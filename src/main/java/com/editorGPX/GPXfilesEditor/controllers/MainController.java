@@ -1,20 +1,28 @@
 package com.editorGPX.GPXfilesEditor.controllers;
 
 import com.editorGPX.GPXfilesEditor.classes.Session;
+import com.editorGPX.GPXfilesEditor.models.GPXCoordinates;
 import com.editorGPX.GPXfilesEditor.services.changeGPXservice;
 import com.editorGPX.GPXfilesEditor.services.printGPXservice;
+
 import io.jenetics.jpx.GPX;
+import io.jenetics.jpx.Route;
+import io.jenetics.jpx.WayPoint;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 @Controller
 public class MainController {
@@ -30,15 +38,43 @@ public class MainController {
         return "main_page";
     }
 
+    // http://localhost:8080/map
+    @GetMapping("/map")
+    public String showGPXmap(Model model) throws IOException {
+        if (lastSession.getFileName().equals("")) {
+            // + add error info
+            return "redirect:/";
+        }
+        model.addAttribute("gpxCoordinates", new GPXCoordinates(lastSession.getGpx()));
+        model.addAttribute("gpx", Files.readString(Path.of(MainController.PATH_TO_DIR + lastSession.getFileName() + ".gpx")));
+        return "mapView";
+    }
+
+    @GetMapping("/waypointInfo")
+    public @ResponseBody WayPoint getWaypointInfo(@RequestParam int wpID) {
+        return lastSession.getGpx().getWayPoints().get(wpID);
+    }
+
+    @GetMapping("/routeInfo")
+    public @ResponseBody Route getRouteInfo(@RequestParam int rtID) {
+        return lastSession.getGpx().getRoutes().get(rtID);
+    }
+
+    @PostMapping("/updateGPX")
+    public String updateGPX(Model model) {
+        //
+        return "error";
+    }
+
     @GetMapping("/uploadFile")
     public String uploadToMainPage() {
         return "redirect:/";
     }
 
-    @PostMapping(value = "/uploadFile")
+    @PostMapping("/uploadFile")
     public String handleFileUpload(@RequestParam("file") MultipartFile file) {
-        if (!file.isEmpty()) {
-            try {
+        try {
+            if (!file.isEmpty()) {
                 File[] dirFiles = new File(PATH_TO_DIR).listFiles();
                 String fileName = "file";
                 if (dirFiles == null || dirFiles.length == 0) {
@@ -56,13 +92,13 @@ public class MainController {
                 stream.close();
                 lastSession = new Session(fileName);
                 printService.GPXtoConsole(lastSession.getGpx());
-                return "redirect:/edit";
-            } catch (Exception e) {
+                //return "redirect:/edit";
+                return "redirect:/map";
+            } else {
                 return "redirect:/";
             }
-        } else {
+        } catch (Exception e) {
             return "redirect:/";
-//            return new ModelAndView("error");
         }
     }
 
