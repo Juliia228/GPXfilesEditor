@@ -1,6 +1,6 @@
 package com.editorGPX.GPXfilesEditor.controllers;
 
-import com.editorGPX.GPXfilesEditor.classes.Session;
+import com.editorGPX.GPXfilesEditor.models.Session;
 import com.editorGPX.GPXfilesEditor.models.GPXCoordinates;
 import com.editorGPX.GPXfilesEditor.services.changeGPXservice;
 import com.editorGPX.GPXfilesEditor.services.printGPXservice;
