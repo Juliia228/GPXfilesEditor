@@ -1,4 +1,4 @@
-package com.editorGPX.GPXfilesEditor.classes;
+package com.editorGPX.GPXfilesEditor.models;
 
 import com.editorGPX.GPXfilesEditor.controllers.MainController;
 import io.jenetics.jpx.GPX;
@@ -25,6 +25,13 @@ public class Session {
         this.fileName = fileName;
         pathLastChangedFile = "";
         try {
+
+//            String testFile;
+////            testFile = "ex_RTandWP";
+//            testFile = "ex3";
+////            testFile = "extRT_WP";
+//            gpx = GPX.read(Path.of("src/main/resources/GPXfiles/"+ testFile + ".gpx"));
+
             gpx = GPX.read(Path.of(MainController.PATH_TO_DIR + fileName + ".gpx"));
             MainController.log.info("Файл успешно загружен");
         } catch (IOException e) {
