@@ -13,9 +13,9 @@
 </head>
 <body>
 <h1>Данный сайт предоставляет возможность редактировать GPX файлы!</h1>
-<form method="POST" enctype="multipart/form-data" action="/uploadFile">
 <h3>Чтобы начать работу с сайтом, загрузите GPX файл:</h3>
-    <input type="file" name="file"><br />
+<form method="POST" enctype="multipart/form-data" action="/uploadFile">
+    <input type="file" required name="file" accept="gpx"><br />
     <input type="submit" value="Загрузить">
 </form>
 </body>
