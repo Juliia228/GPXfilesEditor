@@ -13,10 +13,10 @@ import org.springframework.util.unit.DataSize;
 @EnableAutoConfiguration
 @SpringBootApplication
 public class GPXfilesEditorApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(GPXfilesEditorApplication.class, args);
 	}
+
 	@Bean
 	MultipartConfigElement multipartConfigElement() {
 		MultipartConfigFactory factory = new MultipartConfigFactory();
