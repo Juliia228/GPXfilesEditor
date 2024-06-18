@@ -20,7 +20,7 @@ public class changeGPXservice {
     private final static int TYPE_TRACK_SEG_POINT = 8;
 
     public GPX insertExtensions(GPX gpx, int type, int globalIndex, int index, int trk_seg_wp_index, String tagName, String tagData) throws Exception {
-        // для примера!
+        // для примера
 //        Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
 //        Element extElement = doc.createElement("extensions");
 //        Element requestElement = doc.createElement("ExampleExtensions");
@@ -95,7 +95,6 @@ public class changeGPXservice {
                                 .build()
                                 .build();
                     } catch (Exception e) {
-                        // сделать свои ошибки //////////////////////////////////////////////////
                         throw new Exception(e.getMessage());
                     }
                 } else {
@@ -134,7 +133,6 @@ public class changeGPXservice {
                             throw new Exception("Не нашлось нужной точки");
                         }
                     } catch (Exception e) {
-                        // сделать свои ошибки //////////////////////////////////////////////////
                         throw new Exception(e.getMessage());
                     }
                 } else {
@@ -161,7 +159,6 @@ public class changeGPXservice {
                                 .build()
                                 .build();
                     } catch (Exception e) {
-                        // сделать свои ошибки //////////////////////////////////////////////////
                         throw new Exception(e.getMessage());
                     }
                 } else {
@@ -201,7 +198,6 @@ public class changeGPXservice {
                             throw new Exception("Не нашлось нужного segment");
                         }
                     } catch (Exception e) {
-                        // сделать свои ошибки //////////////////////////////////////////////////
                         throw new Exception(e.getMessage());
                     }
                 } else {
@@ -255,7 +251,6 @@ public class changeGPXservice {
                         throw new Exception("Не нашлось нужного track");
                     }
                 } catch (Exception e) {
-                    // сделать свои ошибки //////////////////////////////////////////////////
                     throw new Exception(e.getMessage());
                 }
             }
