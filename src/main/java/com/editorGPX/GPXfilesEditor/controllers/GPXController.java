@@ -32,30 +32,7 @@ public class GPXController extends BaseController {
 
     @PostMapping("/newGPX")
     public String newGPX(@RequestParam String creator) throws IOException {
-//        GPX newGPX = GPX.builder(creator).build();
-
-//        if (creator.equals("")) {
-//            lastSession.setGpx(GPX.builder().build());
-//        } else {
         service.setGPX(GPX.builder(creator.equals("") ? "https://github.com/Juliia228/GPXfilesEditor" : creator).build());
-//        }
-
-//        // need to change
-//        File[] dirFiles = new File(PATH_TO_DIR).listFiles();
-//        String fileName = "file";
-//        if (dirFiles == null || dirFiles.length == 0) {
-//            fileName += 100;
-//        } else {
-//            fileName += dirFiles.length;
-//            int i = 1;
-//            while (new File(PATH_TO_DIR + fileName + ".gpx").exists()) {
-//                fileName = "file" + (100 + dirFiles.length + i++);
-//            }
-//        }
-//        lastSession = new Session(fileName);
-//        lastSession.setGpx(newGPX);
-//        // to change
-
         return "redirect:/map";
     }
 
@@ -69,50 +46,4 @@ public class GPXController extends BaseController {
             return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
         }
     }
-
-//    @PostMapping("/updateGPX")
-//    public @ResponseBody String saveGPX(StringBuffer textGPX) {
-//        try {
-//            // textGPX -> file -> GPX.read(file)
-//            Path
-//            GPX newGPX = GPX.
-//        }
-//    }
-
-    //    @GetMapping("/edit")
-//    public String edit() {
-//        if (lastSession.getFileName().equals("")) {
-//            // + add error info
-//            return "redirect:/";
-//        }
-//        return "editor";
-//    }
-//
-//    @GetMapping("/editGPX")
-//    public String editToMainPage() {
-//        return "redirect:/";
-//    }
-//
-//    @PostMapping("/editGPX")
-//    public String editGPXfile(@RequestParam int tag,
-//                              @RequestParam(required = false, defaultValue = "-1") int tagLevel1,
-//                              @RequestParam(required = false, defaultValue = "-1") int tagLevel2,
-//                              @RequestParam(required = false, defaultValue = "-1") int trk_seg_point,
-//                              @RequestParam String tagName, @RequestParam String tagData) {
-//
-//        // добавить валидацию пришедших данных
-//
-//        String newFileName;
-//        try {
-//            GPX gpx = changeService.insertExtensions(lastSession.getGpx(), tag,
-//                    tagLevel1 - 1, tagLevel2 - 1, trk_seg_point - 1,
-//                    tagName, tagData);
-//            newFileName = lastSession.setGpx(gpx); // обновление gpx + запись нового файла
-//        } catch (Exception e) {
-//            log.error(e.getMessage());
-//            return "redirect:/";
-//        }
-//        log.info("Файл успешно изменен. Измененный файл: " + newFileName);
-//        return "redirect:/edit";
-//    }
 }
