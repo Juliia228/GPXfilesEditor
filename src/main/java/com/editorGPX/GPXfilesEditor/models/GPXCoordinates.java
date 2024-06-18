@@ -58,12 +58,4 @@ public class GPXCoordinates {
         }
         return result;
     }
-
-//    private Coordinates[] listToJsonArray(List<WayPoint> wp) {
-//        Coordinates[] result = new Coordinates[wp.size()];
-//        for (int i = 0; i < wp.size(); i++) {
-//            result[i] = new Coordinates(wp.get(i).getLatitude().doubleValue(), wp.get(i).getLongitude().doubleValue());
-//        }
-//        return result;
-//    }
 }
