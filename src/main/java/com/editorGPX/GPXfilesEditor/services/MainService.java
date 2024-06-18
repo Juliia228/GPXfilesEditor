@@ -10,7 +10,6 @@ import java.io.IOException;
 @Service
 @Data
 public class MainService {
-    @Autowired
     private Session lastSession = new Session();
 
     public MainService() throws IOException {
