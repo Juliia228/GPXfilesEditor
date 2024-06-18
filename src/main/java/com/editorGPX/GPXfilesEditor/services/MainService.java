@@ -3,12 +3,14 @@ package com.editorGPX.GPXfilesEditor.services;
 import com.editorGPX.GPXfilesEditor.models.Session;
 import io.jenetics.jpx.GPX;
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
 
 @Service
 @Data
 public class MainService {
+    @Autowired
     private Session lastSession = new Session();
 
     public MainService() throws IOException {
