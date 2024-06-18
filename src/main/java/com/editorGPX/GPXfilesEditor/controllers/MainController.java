@@ -25,12 +25,8 @@ public class MainController extends BaseController {
 
     @GetMapping("/map")
     public String showGPXmap(Model model) throws IOException {
-//        if (lastSession.getGpx().equals(GPX.builder().build())) {
-//            // + add error info
-//            return "redirect:/";
-//        }
         model.addAttribute("gpxCoordinates", new GPXCoordinates(service.getGPX()));
         model.addAttribute("gpx", Files.readString(Path.of(service.getFullPathToFile())));
-        return "mapView";
+        return "map_view";
     }
 }
