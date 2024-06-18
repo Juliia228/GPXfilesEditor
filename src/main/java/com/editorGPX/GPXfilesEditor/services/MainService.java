@@ -30,5 +30,4 @@ public class MainService {
     public void setGPX(GPX gpx) throws IOException {
         lastSession.setGpx(gpx);
     }
-
 }
