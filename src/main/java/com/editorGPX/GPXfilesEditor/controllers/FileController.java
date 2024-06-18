@@ -12,9 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -30,23 +27,7 @@ public class FileController extends BaseController {
     public String handleFileUpload(@RequestParam("file") MultipartFile file) {
         try {
             if (!file.isEmpty()) {
-                File[] dirFiles = new File(PATH_TO_DIR).listFiles();
-                String fileName = "file";
-                if (dirFiles == null || dirFiles.length == 0) {
-                    fileName += 100;
-                } else {
-                    fileName += dirFiles.length;
-                    int i = 1;
-                    while (new File(PATH_TO_DIR + fileName + ".gpx").exists()) {
-                        fileName = "file" + (100 + dirFiles.length + i++);
-                    }
-                }
-                BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(PATH_TO_DIR + fileName + ".gpx"));
-                byte[] bytes = file.getBytes();
-                stream.write(bytes);
-                stream.close();
-                service.setLastSession(new Session(fileName));
-//                printService.GPXtoConsole(lastSession.getGpx());
+                service.setLastSession(new Session(file));
                 return "redirect:/map";
             } else {
                 return "redirect:/";
