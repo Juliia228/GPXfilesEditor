@@ -1,0 +1,88 @@
+.page {
+    display: grid;
+    grid-template-columns: 50% 50%;
+    height: 97vh;
+}
+
+button {
+
+}
+
+<!--        #cancelButton, #saveWPFieldsButton {-->
+<!--          margin: 4px 0px 4px 0px;-->
+<!--        }-->
+
+<!--        #changeButton, #saveButton {-->
+<!--          align-self: center;-->
+<!--        }-->
+
+#changeButton, #saveButton, #toMainPage, #loadFile, #setFieldView {
+    display: block;
+    margin: 8px auto;
+}
+
+#toMainPage {
+    margin-right: 133px;
+}
+
+#loadFile {
+    margin-right: 4px;
+}
+
+#textView, #waypointInfo {
+    margin: 0 8px;
+}
+
+h3 {
+    margin: 0;
+    padding-bottom: 8px;
+}
+
+.buttons {
+    display: flex;
+    flex-direction: column;
+}
+
+#changingButtons {
+    display: flex;
+    justify-content: center;
+}
+
+#finishButtons {
+    display: flex;
+    justify-content: right;
+}
+
+.editor, #wpHeader {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+#waypointInfo, #otherFields {
+    display: none;
+}
+
+#fullTextFile {
+    resize: none;
+    width: 100%;
+    height: 75vh;
+}
+
+.field {
+    margin-bottom: 4px;
+}
+
+#changingButtons {
+    display: none;
+    //display: flex;
+    // задать направление горизонталь
+}
+
+#WPid {
+    display: none;
+}
+
+[class*="leaflet-attribution-flag"] {
+    display: none !important;
+}

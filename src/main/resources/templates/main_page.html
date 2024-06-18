@@ -18,5 +18,9 @@
     <input type="file" required name="file" accept="gpx"><br />
     <input type="submit" value="Загрузить">
 </form>
+<h3>Или <input type="submit" form="formNewGPX" value="создайте"> новый GPX файл</h3>
+<form method="POST" action="/newGPX" id="formNewGPX">
+    <input type="text" name="creator" placeholder="Поле для указания creator">
+</form>
 </body>
 </html>
