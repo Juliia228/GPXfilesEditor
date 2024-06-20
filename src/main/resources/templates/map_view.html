@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>GPX editor</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <link rel="stylesheet" type="text/css" href="/css/style_map.css"/>
+</head>
+<body>
+<div class="page">
+  <div id="map"></div>
+  <div class="editor">
+    <div id="waypointInfo" class="fieldMode">
+      <div id="wpHeader">
+        <h3>Данные о точке</h3>
+        <input id="WPid" type=number>
+        <button id="changeButton">Изменить данные</button>
+        <div id="changingButtons">
+          <button id="cancelButton">Отменить</button>
+          <button id="saveWPFieldsButton" type="submit">Сохранить</button>
+        </div>
+      </div>
+      <div id="latField" class="field">
+        <label for="lat">Latitude:</label>
+        <input id="lat" type="text" value="-" placeholder="Введите значение" class="fieldInput" disabled>
+      </div>
+      <div id="lonField" class="field">
+        <label for="lon">Longitude:</label>
+        <input id="lon" type="text" value="-" placeholder="Введите значение" class="fieldInput" disabled>
+      </div>
+      <div id="eleField" class="field">
+        <label for="ele">Elevation:</label>
+        <input id="ele" type="text" value="-" placeholder="Введите значение (m)" class="fieldInput" disabled>
+      </div>
+      <div id="timeField" class="field">
+        <label for="time">Time:</label>
+        <input id="time" type="text" value="-" placeholder="Введите значение (yyyy-mm-ddThh:mm:ssZ)" class="fieldInput" disabled>
+      </div>
+      <div id="nameField" class="field">
+        <label for="name">Name:</label>
+        <input id="name" type="text" value="-" placeholder="Введите значение" class="fieldInput" disabled>
+      </div>
+      <div id="descField" class="field">
+        <label for="desc">Description:</label>
+        <input id="desc" type="text" value="-" placeholder="Введите значение" class="fieldInput" disabled>
+      </div>
+      <div id="extensionsField" class="field">
+        <label for="extensions">Extensions:</label>
+        <textarea id="extensions" placeholder="Введите значение" class="fieldInput" disabled></textarea>
+      </div>
+      <button id="showOtherFields">Показать все поля</button>
+      <div id="otherFields">
+        <div id="cmtField" class="field">
+          <label for="cmt">GPS comment:</label>
+          <input id="cmt" type="text" value="-" placeholder="Введите значение" class="fieldInput" disabled>
+        </div>
+        <div id="magVarField" class="field">
+          <label for="magVar">Magnetic variation:</label>
+          <input id="magVar" type="text" value="-" placeholder="Введите значение" class="fieldInput" disabled>
+        </div>
+        <div id="geoidHeightField" class="field">
+          <label for="geoidHeight">Height of geoid:</label>
+          <input id="geoidHeight" type="text" value="-" placeholder="Введите значение (m)" class="fieldInput" disabled>
+        </div>
+        <div id="srcField" class="field">
+          <label for="src">Source:</label>
+          <input id="src" type="text" value="-" placeholder="Введите значение" class="fieldInput" disabled>
+        </div>
+        <div id="linkField" class="field">
+          <label for="link">Links:</label>
+          <input id="link" type="text" value="-" placeholder="Введите значение" class="fieldInput" disabled>
+        </div>
+        <div id="symField" class="field">
+          <label for="sym">GPS symbol name:</label>
+          <input id="sym" type="text" value="-" placeholder="Введите значение" class="fieldInput" disabled>
+        </div>
+        <div id="typeField" class="field">
+          <label for="type">Type:</label>
+          <input id="type" type="text" value="-" placeholder="Введите значение" class="fieldInput" disabled>
+        </div>
+        <div id="fixField" class="field">
+          <label for="fix">GPX fix:</label>
+          <input id="fix" type="text" value="-" placeholder="Введите значение" class="fieldInput" disabled>
+        </div>
+        <div id="satField" class="field">
+          <label for="sat">Number of satellites:</label>
+          <input id="sat" type="text" value="-" placeholder="Введите значение" class="fieldInput" disabled>
+        </div>
+        <div id="hdopField" class="field">
+          <label for="hdop">Horizontal dilution of precision:</label>
+          <input id="hdop" type="text" value="-" placeholder="Введите значение" class="fieldInput" disabled>
+        </div>
+        <div id="vdopField" class="field">
+          <label for="vdop">Vertical dilution of precision:</label>
+          <input id="vdop" type="text" value="-" placeholder="Введите значение" class="fieldInput" disabled>
+        </div>
+        <div id="pdopField" class="field">
+          <label for="pdop">Position dilution of precision:</label>
+          <input id="pdop" type="text" value="-" placeholder="Введите значение" class="fieldInput" disabled>
+        </div>
+        <div id="ageofdgpsdataField" class="field">
+          <label for="ageofdgpsdata">Age of DGPS data:</label>
+          <input id="ageofdgpsdata" type="text" value="-" placeholder="Введите значение (s)" class="fieldInput" disabled>
+        </div>
+        <div id="dgpsidField" class="field">
+          <label for="dgpsid">ID of DGPS:</label>
+          <input id="dgpsid" type="text" value="-" placeholder="Введите значение" class="fieldInput" disabled>
+        </div>
+        <button id="hideOtherFields">Скрыть поля</button>
+      </div>
+      <div class="buttons">
+        <button id="deleteButton">Удалить объект из файла</button>
+        <button id="setTextView">Показать полный текст файла</button>
+      </div>
+    </div>
+    <div id="textView">
+        <textarea id="fullTextFile"></textarea>
+<!--      <div class="buttons">-->
+        <button id="saveButton">Сохранить изменения</button>
+        <button id="setFieldView" disabled>Изменить режим редактирования</button>
+<!--      </div>-->
+    </div>
+    <div id="finishButtons">
+    <form method="GET" action="/">
+      <button id="toMainPage" type="submit">Вернуться на главную</button>
+    </form>
+    <form method="GET" action="/download">
+      <button id="loadFile" type="submit">Скачать файл</button>
+    </form>
+    </div>
+  </div>
+</div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script th:inline="javascript">
+        const BASE_URL = new URL('http://localhost:8080');
+        // переменная для хранения json данных о точке/маршруте/треке
+        let jsonData = null;
+
+        // получаем текстовый GPX по запросу
+        async function getGPX() {
+            const url = new URL('/getTextGPX', BASE_URL);
+            return fetch(url)
+            .then((response) => {
+                if (response.ok) {
+                    return response.text();
+                }
+                console.log('Произошла ошибка при выполнении запроса:');
+                console.log(response);
+                // + добавить отображение ошибки на странице
+            })
+            .then((text) => {
+                document.getElementById('fullTextFile').value = text;
+                return text;
+            })
+            .catch((error) => {
+                console.log(error);
+                // + добавить отображение ошибки на странице
+            })
+        }
+
+        // получаем GPXCoordinates по запросу
+        async function getGPXCoordinates() {
+            const url = new URL('/getCoordinates', BASE_URL);
+            return fetch(url)
+            .then((response) => {
+                if (response.ok) {
+                    return response.text();
+                }
+                console.log('Произошла ошибка при выполнении запроса:');
+                console.log(response);
+                // + добавить отображение ошибки на странице
+            })
+            .then((text) => {
+                //console.log('JSON.parse(text)', JSON.parse(text));
+                return JSON.parse(text);
+            })
+            .catch((error) => {
+                console.log(error);
+                // + добавить отображение ошибки на странице
+            })
+        }
+
+        async function checkWPClick(index) {
+            console.log(`Waypoint №${index} was clicked`);
+            document.getElementById('textView').style.display = 'none';
+
+            jsonData = null;
+            // запрос к серверу для получения данных о точке (wp или из трека или из маршрута)
+            const url = new URL('/waypoint/info', BASE_URL);
+            url.searchParams.set('wpID', index);
+            fetch(url)
+            .then((response) => {
+                if (response.ok) {
+                    return response.text();
+                }
+                console.log('Произошла ошибка при выполнении запроса');
+                // + добавить отображение ошибки на странице
+            })
+            .then((text) => {
+                //document.getElementById('waypointInfo').style.display = 'block';
+                //setChangeMode('field', false);
+                setFieldView();
+
+                text = text.replace(/['"]elevation['"]:\s*([\d.,]+)\s*m/, function(match, value) {
+                    return '"elevation":"' + value + '"';
+                });
+                jsonData = JSON.parse(text);
+                //fillInFields();
+                //onCancel();
+                fillAndDisableFields(index);
+            })
+            .catch((error) => {
+                console.log(error);
+                // + добавить отображение ошибки на странице
+            })
+        }
+
+        // для создания новой точки по ее координатам
+        async function createWP(latlng) {
+            jsonData = null;
+            // запрос к серверу для получения данных о точке
+            const url = new URL('/waypoint/new', BASE_URL);
+            url.searchParams.set('latitude', latlng.lat);
+            url.searchParams.set('longitude', latlng.lng);
+            fetch(url)
+            .then((response) => {
+                if (response.ok) {
+                    return response.text();
+                }
+                console.log('Произошла ошибка при выполнении запроса:');
+                console.log(response);
+                // + добавить отображение ошибки на странице
+            })
+            .then((text) => {
+                jsonData = JSON.parse(text);
+
+                getGPX()
+                .then((response) => {
+                    gpx = response;
+                });
+
+                let index;
+                getGPXCoordinates()
+               .then((response) => {
+                    gpxCoordinates = response;
+                    index = gpxCoordinates.wayPoints.indexOf([latlng.lat, latlng.lng]);
+                    addWaypointToMap(latlng, 'Новая точка', () => checkWPClick(index));
+                    fillAndDisableFields(index);
+                    setFieldView();
+                });
+            })
+            .catch((error) => {
+                console.log(error);
+                // + добавить отображение ошибки на странице
+            })
+        }
+
+        // для кнопки Отменить и не только
+        function fillAndDisableFields(index) {
+            fillInFields(index);
+            document.querySelectorAll(".fieldInput").forEach((element) => {
+                element.disabled = true;
+            });
+            document.getElementById('changeButton').style.display = 'block';
+            document.getElementById('changingButtons').style.display = 'none';
+        }
+
+        // заполняет поля данными
+        function fillInFields(index) {
+            if (jsonData) {
+                console.log("WPid before:", document.getElementById('WPid').value);
+                console.log("index=", index);
+                document.getElementById('WPid').value = index;
+                console.log("WPid after:", document.getElementById('WPid').value);
+                // в jsonData еще приходит speed и course, разобраться что это
+                document.querySelector("#latField > .fieldInput").value = jsonData.latitude ? jsonData.latitude : '-';
+                document.querySelector("#lonField > .fieldInput").value = jsonData.longitude ? jsonData.longitude : '-';
+                document.querySelector("#eleField > .fieldInput").value = jsonData.elevation ? jsonData.elevation : '-';
+                document.querySelector("#timeField > .fieldInput").value = jsonData.time ? jsonData.time : '-';
+                document.querySelector("#magVarField > .fieldInput").value = jsonData.magneticVariation ? jsonData.magneticVariation : '-';
+                document.querySelector("#geoidHeightField > .fieldInput").value = jsonData.geoidHeight ? jsonData.geoidHeight : '-';
+                document.querySelector("#nameField > .fieldInput").value = jsonData.name ? jsonData.name : '-';
+                document.querySelector("#cmtField > .fieldInput").value = jsonData.comment ? jsonData.comment : '-';
+                document.querySelector("#descField > .fieldInput").value = jsonData.description ? jsonData.description : '-';
+                document.querySelector("#srcField > .fieldInput").value = jsonData.source ? jsonData.source : '-';
+                document.querySelector("#linkField > .fieldInput").value = jsonData.links.length ? jsonData.links : '-';
+                document.querySelector("#symField > .fieldInput").value = jsonData.symbol ? jsonData.symbol : '-';
+                document.querySelector("#typeField > .fieldInput").value = jsonData.type ? jsonData.type : '-';
+                document.querySelector("#fixField > .fieldInput").value = jsonData.fix ? jsonData.fix : '-';
+                document.querySelector("#satField > .fieldInput").value = jsonData.sat ? jsonData.sat : '-';
+                document.querySelector("#hdopField > .fieldInput").value = jsonData.hdop ? jsonData.hdop : '-';
+                document.querySelector("#vdopField > .fieldInput").value = jsonData.vdop ? jsonData.vdop : '-';
+                document.querySelector("#pdopField > .fieldInput").value = jsonData.pdop ? jsonData.pdop : '-';
+                document.querySelector("#ageofdgpsdataField > .fieldInput").value = jsonData.ageOfGPSData ? jsonData.ageOfGPSData : '-';
+                document.querySelector("#dgpsidField > .fieldInput").value = jsonData.dgpsid ? jsonData.dgpsid : '-';
+                document.querySelector("#extensionsField > .fieldInput").value = jsonData.extensions ? jsonData.extensions : '-';
+            } else {
+                // error
+            }
+        }
+
+        //
+        async function showFieldsOfWaypoint(index) {
+            console.log(`Waypoint №${index} was clicked`);
+            document.getElementById('textView').style.display = 'none';
+            // запрос к серверу для получения данных о точке
+            jsonData = null;
+            const url = new URL('/waypoint/info', BASE_URL);
+            url.searchParams.set('id', index);
+
+            fetch(url)
+            .then((response) => {
+                if (response.ok) {
+                    return response.text();
+                }
+                console.log('Произошла ошибка при выполнении запроса');
+                // + добавить отображение ошибки на странице
+            })
+            .then((text) => {
+                //document.getElementById('waypointInfo').style.display = 'block';
+                //setChangeMode('field', false);
+                setFieldView();
+
+                text = text.replace(/['"]elevation['"]:\s*([\d.,]+)\s*m/, function(match, value) {
+                    return '"elevation":"' + value + '"';
+                });
+                jsonData = JSON.parse(text);
+                //fillInFields();
+                //onCancel();
+                fillAndDisableFields(index);
+            })
+            .catch((error) => {
+                console.log(error);
+                // + добавить отображение ошибки на странице
+            })
+        }
+
+        // добавляет точку на карту по ее координатам
+        function addWaypointToMap(waypoint, popupText, fn) {
+            const point = L.marker(waypoint, {title: 'Press me to see details'}).addTo(map);
+            point.bindPopup(popupText);
+            point.on('click', fn);
+        }
+
+        // для кнопки Изменить данные
+        function onActiveChanging() {
+            document.getElementById('changeButton').style.display = 'none';
+            document.getElementById('changingButtons').style.display = 'flex';
+            document.querySelectorAll(".fieldInput").forEach((element) => {
+                element.disabled = false;
+                if (element.value === '-') {
+                    element.value = "";
+                }
+            });
+        }
+
+        // для кнопки Сохранить
+        async function onSaveWP() {
+          // Отправлять данные на post /updateWaypoint чтобы сохранить новые данные
+          const url = new URL('/waypoint/update', BASE_URL);
+          const index = document.getElementById('WPid').value;
+          url.searchParams.set('id', index);
+          url.searchParams.set('latitude', document.querySelector("#latField > .fieldInput").value);
+          url.searchParams.set('longitude', document.querySelector("#lonField > .fieldInput").value);
+
+<!--          if (document.querySelector("#eleField > .fieldInput").value != '-' && document.querySelector("#eleField > .fieldInput").value) {-->
+<!--              url.searchParams.set('elevation', document.querySelector("#cmtField > .fieldInput").value);-->
+<!--          }-->
+<!--          if (document.querySelector("#eleField > .fieldInput").value != '-' && document.querySelector("#eleField > .fieldInput").value) {-->
+<!--              url.searchParams.set('elevation', document.querySelector("#cmtField > .fieldInput").value);-->
+<!--          }-->
+<!--          if (document.querySelector("#eleField > .fieldInput").value != '-' && document.querySelector("#eleField > .fieldInput").value) {-->
+<!--              url.searchParams.set('elevation', document.querySelector("#cmtField > .fieldInput").value);-->
+<!--          }-->
+<!--          if (document.querySelector("#eleField > .fieldInput").value != '-' && document.querySelector("#eleField > .fieldInput").value) {-->
+<!--              url.searchParams.set('elevation', document.querySelector("#cmtField > .fieldInput").value);-->
+<!--          }-->
+<!--          if (document.querySelector("#eleField > .fieldInput").value != '-' && document.querySelector("#eleField > .fieldInput").value) {-->
+<!--              url.searchParams.set('elevation', document.querySelector("#cmtField > .fieldInput").value);-->
+<!--          }-->
+<!--          if (document.querySelector("#eleField > .fieldInput").value != '-' && document.querySelector("#eleField > .fieldInput").value) {-->
+<!--              url.searchParams.set('elevation', document.querySelector("#cmtField > .fieldInput").value);-->
+<!--          }if (document.querySelector("#eleField > .fieldInput").value != '-' && document.querySelector("#eleField > .fieldInput").value) {-->
+<!--              url.searchParams.set('elevation', document.querySelector("#cmtField > .fieldInput").value);-->
+<!--          }if (document.querySelector("#eleField > .fieldInput").value != '-' && document.querySelector("#eleField > .fieldInput").value) {-->
+<!--              url.searchParams.set('elevation', document.querySelector("#cmtField > .fieldInput").value);-->
+<!--          }if (document.querySelector("#eleField > .fieldInput").value != '-' && document.querySelector("#eleField > .fieldInput").value) {-->
+<!--              url.searchParams.set('elevation', document.querySelector("#cmtField > .fieldInput").value);-->
+<!--          }-->
+<!--          if (document.querySelector("#eleField > .fieldInput").value != '-' && document.querySelector("#eleField > .fieldInput").value) {-->
+<!--              url.searchParams.set('elevation', document.querySelector("#cmtField > .fieldInput").value);-->
+<!--          }-->
+<!--          if (document.querySelector("#eleField > .fieldInput").value != '-' && document.querySelector("#eleField > .fieldInput").value) {-->
+<!--              url.searchParams.set('elevation', document.querySelector("#cmtField > .fieldInput").value);-->
+<!--          }-->
+<!--          if (document.querySelector("#eleField > .fieldInput").value != '-' && document.querySelector("#eleField > .fieldInput").value) {-->
+<!--              url.searchParams.set('elevation', document.querySelector("#cmtField > .fieldInput").value);-->
+<!--          }-->
+<!--          if (document.querySelector("#eleField > .fieldInput").value != '-' && document.querySelector("#eleField > .fieldInput").value) {-->
+<!--              url.searchParams.set('elevation', document.querySelector("#cmtField > .fieldInput").value);-->
+<!--          }-->
+<!--          if (document.querySelector("#eleField > .fieldInput").value != '-' && document.querySelector("#eleField > .fieldInput").value) {-->
+<!--              url.searchParams.set('elevation', document.querySelector("#cmtField > .fieldInput").value);-->
+<!--          }-->
+<!--          if (document.querySelector("#eleField > .fieldInput").value != '-' && document.querySelector("#eleField > .fieldInput").value) {-->
+<!--              url.searchParams.set('elevation', document.querySelector("#cmtField > .fieldInput").value);-->
+<!--          }-->
+<!--          if (document.querySelector("#eleField > .fieldInput").value != '-' && document.querySelector("#eleField > .fieldInput").value) {-->
+<!--              url.searchParams.set('elevation', document.querySelector("#cmtField > .fieldInput").value);-->
+<!--          }-->
+<!--          -->
+<!--          -->
+<!--          -->
+<!--          -->
+<!--          -->
+<!--          -->
+<!--          -->
+<!--          -->
+<!--          -->
+<!--          url.searchParams.set('time', getValueFromSelector("#timeField > .fieldInput"));-->
+<!--          url.searchParams.set('magneticVariation', getValueFromSelector("#magVarField > .fieldInput"));-->
+<!--          url.searchParams.set('geoidHeight', getValueFromSelector("#geoidHeightField > .fieldInput"));-->
+            console.log('name: ', document.querySelector("#nameField > .fieldInput").value);
+          url.searchParams.set('name', document.querySelector("#nameField > .fieldInput").value);
+<!--          if (document.querySelector("#cmtField > .fieldInput").value != '-' && document.querySelector("#cmtField > .fieldInput").value) {-->
+<!--              url.searchParams.set('comment', document.querySelector("#cmtField > .fieldInput").value);-->
+<!--          }-->
+<!--          url.searchParams.set('comment', getValueFromSelector("#cmtField > .fieldInput"));-->
+<!--          url.searchParams.set('description', getValueFromSelector("#descField > .fieldInput"));-->
+<!--          url.searchParams.set('source', getValueFromSelector("#srcField > .fieldInput"));-->
+<!--          url.searchParams.set('link', getValueFromSelector("#linkField > .fieldInput"));-->
+<!--          url.searchParams.set('symbol', getValueFromSelector("#symField > .fieldInput"));-->
+<!--          url.searchParams.set('type', getValueFromSelector("#typeField > .fieldInput"));-->
+<!--          url.searchParams.set('fix', getValueFromSelector("#fixField > .fieldInput"));-->
+<!--          url.searchParams.set('sat', getValueFromSelector("#satField > .fieldInput"));-->
+<!--          url.searchParams.set('hdop', getValueFromSelector("#hdopField > .fieldInput"));-->
+<!--          url.searchParams.set('vdop', getValueFromSelector("#vdopField > .fieldInput"));-->
+<!--          url.searchParams.set('pdop', getValueFromSelector("#pdopField > .fieldInput"));-->
+<!--          url.searchParams.set('ageOfGPSData', getValueFromSelector("#ageofdgpsdataField > .fieldInput"));-->
+<!--          url.searchParams.set('dgpsid', getValueFromSelector("#dgpsidField > .fieldInput"));-->
+          url.searchParams.set('extensions', document.querySelector("#extensionsField > .fieldInput").value);
+          console.log(url);
+          fetch(url, {method: 'POST'})
+          .then((response) => {
+              if (response.ok) {
+                  alert('Изменения успешно сохранены');
+                  return response.text();
+              }
+              console.log('Произошла ошибка при выполнении запроса');
+              // + добавить отображение ошибки на странице
+          })
+          .then((text) => {
+              //document.getElementById('waypointInfo').style.display = 'block';
+              //setChangeMode('field', false);
+              setFieldView();
+
+              text = text.replace(/['"]elevation['"]:\s*([\d.,]+)\s*m/, function(match, value) {
+                  return '"elevation":"' + value + '"';
+              });
+              jsonData = JSON.parse(text);
+              //fillInFields();
+              //onCancel();
+              fillAndDisableFields(index);
+          })
+          .catch((error) => {
+              console.log(error);
+              // + добавить отображение ошибки на странице
+          })
+        }
+
+<!--        function getValueFromSelector(selector) {-->
+<!--&lt;!&ndash;            elector&ndash;&gt;-->
+<!--            return (document.querySelector(selector).value != '-' && document.querySelector(selector).value) ? document.querySelector(selector).value : null;-->
+<!--        }-->
+
+        // для кнопки Сохранить изменения (в полном текстовом файле)
+        function onSaveTextGPX() {
+            // Отправлять данные на post /updateGPX чтобы сохранить новые данные
+            const url = new URL('/updateGPX', BASE_URL);
+            url.searchParams.set('fullTextFile', document.getElementById('fullTextFile').value);
+            fetch(url, {method: 'POST'})
+            .then((response) => {
+                if (!response.ok) {
+                    alert("Неверный синтаксис файла. Зайдите на https://www.topografix.com/GPX/1/1/, чтобы проверить правильность написания тегов");
+                    console.log('Произошла ошибка при выполнении запроса');
+                } else {
+                    alert('Изменения успешно сохранены');
+                    //console.log('Успешно');
+                }
+            });
+        }
+
+        // для кнопки удалить
+        function onDelete() {
+            //
+        }
+
+        function setFieldView() {
+            fillAndDisableFields();
+            document.getElementById('waypointInfo').style.display = 'block';
+            document.getElementById('textView').style.display = 'none';
+        }
+        function setTextView() {
+            document.getElementById('waypointInfo').style.display = 'none';
+            document.getElementById('textView').style.display = 'block';
+            document.getElementById('setFieldView').disabled = false;
+        }
+
+        function showOtherFields() {
+            document.getElementById('otherFields').style.display = 'block';
+            document.getElementById('showOtherFields').style.display = 'none';
+        }
+        function hideOtherFields() {
+            document.getElementById('otherFields').style.display = 'none';
+            document.getElementById('showOtherFields').style.display = 'block';
+        }
+
+        // присваиваем кнопкам обработчики событий
+        document.getElementById('changeButton').addEventListener('click', onActiveChanging);
+        document.getElementById('saveWPFieldsButton').addEventListener('click', onSaveWP);
+        document.getElementById('saveButton').addEventListener('click', onSaveTextGPX);
+        document.getElementById('cancelButton').addEventListener('click', fillAndDisableFields);
+        document.getElementById('deleteButton').addEventListener('click', onDelete);
+        document.getElementById('setTextView').addEventListener('click', setTextView);
+        document.getElementById('setFieldView').addEventListener('click', setFieldView);
+        document.getElementById('showOtherFields').addEventListener('click', showOtherFields);
+        document.getElementById('hideOtherFields').addEventListener('click', hideOtherFields);
+
+        // Получение GPX данных из модели
+        let gpxCoordinates = /*[[${gpxCoordinates}]]*/;
+        let gpx = /*[[${gpx}]]*/;
+        document.getElementById('fullTextFile').value = gpx;
+
+        // Создание карты
+        const map = new L.Map('map');
+        // Добавление плитки (тайлов) карты
+        const service = new L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            minZoom: 1,
+            maxZoom: 19
+        }).addTo(map);
+
+        // Масштабирование карты
+        const bounds = new L.LatLngBounds(new L.LatLng(gpxCoordinates.min_latitude, gpxCoordinates.min_longitude),
+        new L.LatLng(gpxCoordinates.max_latitude, gpxCoordinates.max_longitude));
+        map.addLayer(service).fitBounds(bounds);
+
+        map.on('zoom', () => map.closePopup());
+        map.on('click', function(e) {
+            createWP(e.latlng);
+        });
+
+
+        // Отображение точек, маршрутов и треков на карте
+        gpxCoordinates.wayPoints?.forEach((wp) => {
+            const index = gpxCoordinates.wayPoints.indexOf(wp);
+            addWaypointToMap(wp, `It is waypoint №${index}`, () => checkWPClick(index));
+        });
+
+        gpxCoordinates.routes?.forEach((rt) => {
+            const routeIndex = gpxCoordinates.routes.indexOf(rt);
+            const route = L.polyline(rt, {color: 'blue', weight: 6}).addTo(map);
+            route.bindPopup(`It is route №${routeIndex}`);
+            route.on('click', () => checkClick('route', routeIndex));
+            <!--            rt.forEach((wp) => {-->
+<!--                const index = gpxCoordinates.routes[routeIndex].indexOf(wp);-->
+<!--                addWaypointToMap(wp, `It is waypoint №${index} in route`, () => checkClick('route', index));-->
+
+<!--&lt;!&ndash;                const waypoint = L.marker(wp).addTo(map);&ndash;&gt;-->
+<!--&lt;!&ndash;                waypoint.bindPopup(`It is waypoint №${index} in route`);&ndash;&gt;-->
+<!--&lt;!&ndash;                //waypoint.on('click', () => checkWPClick(index));&ndash;&gt;-->
+<!--            });-->
+        });
+
+        gpxCoordinates.tracks?.forEach((trk) => {
+            const trackIndex = gpxCoordinates.tracks.indexOf(trk);
+            trk.forEach((trkSeg) => {
+                const index = gpxCoordinates.tracks[trackIndex].indexOf(trkSeg);
+                const trkSegment = L.polyline(trkSeg, {color: 'red', weight: 6}).addTo(map);
+                trkSegment.bindPopup(`It is track segment №${index} in track №${trackIndex}`);
+            });
+        });
+    </script>
+</body>
+</html>
