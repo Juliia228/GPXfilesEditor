@@ -239,11 +239,16 @@
                     gpx = response;
                 });
 
-                let index;
                 getGPXCoordinates()
                .then((response) => {
                     gpxCoordinates = response;
-                    index = gpxCoordinates.wayPoints.indexOf([latlng.lat, latlng.lng]);
+                    let index;
+                    gpxCoordinates.wayPoints.forEach((value, ind) => {
+                        if (value[0] === latlng.lat && value[1] === latlng.lng) {
+                            index = ind;
+                        }
+                    })
+                    //console.log("index=", index);
                     addWaypointToMap(latlng, 'Новая точка', () => checkWPClick(index));
                     fillAndDisableFields(index);
                     setFieldView();
@@ -268,7 +273,7 @@
         // заполняет поля данными
         function fillInFields(index) {
             if (jsonData) {
-                console.log("WPid before:", document.getElementById('WPid').value);
+                //console.log("WPid before:", document.getElementById('WPid').value);
                 console.log("index=", index);
                 document.getElementById('WPid').value = index;
                 console.log("WPid after:", document.getElementById('WPid').value);
@@ -362,106 +367,66 @@
           url.searchParams.set('id', index);
           url.searchParams.set('latitude', document.querySelector("#latField > .fieldInput").value);
           url.searchParams.set('longitude', document.querySelector("#lonField > .fieldInput").value);
-
-<!--          if (document.querySelector("#eleField > .fieldInput").value != '-' && document.querySelector("#eleField > .fieldInput").value) {-->
-<!--              url.searchParams.set('elevation', document.querySelector("#cmtField > .fieldInput").value);-->
-<!--          }-->
-<!--          if (document.querySelector("#eleField > .fieldInput").value != '-' && document.querySelector("#eleField > .fieldInput").value) {-->
-<!--              url.searchParams.set('elevation', document.querySelector("#cmtField > .fieldInput").value);-->
-<!--          }-->
-<!--          if (document.querySelector("#eleField > .fieldInput").value != '-' && document.querySelector("#eleField > .fieldInput").value) {-->
-<!--              url.searchParams.set('elevation', document.querySelector("#cmtField > .fieldInput").value);-->
-<!--          }-->
-<!--          if (document.querySelector("#eleField > .fieldInput").value != '-' && document.querySelector("#eleField > .fieldInput").value) {-->
-<!--              url.searchParams.set('elevation', document.querySelector("#cmtField > .fieldInput").value);-->
-<!--          }-->
-<!--          if (document.querySelector("#eleField > .fieldInput").value != '-' && document.querySelector("#eleField > .fieldInput").value) {-->
-<!--              url.searchParams.set('elevation', document.querySelector("#cmtField > .fieldInput").value);-->
-<!--          }-->
-<!--          if (document.querySelector("#eleField > .fieldInput").value != '-' && document.querySelector("#eleField > .fieldInput").value) {-->
-<!--              url.searchParams.set('elevation', document.querySelector("#cmtField > .fieldInput").value);-->
-<!--          }if (document.querySelector("#eleField > .fieldInput").value != '-' && document.querySelector("#eleField > .fieldInput").value) {-->
-<!--              url.searchParams.set('elevation', document.querySelector("#cmtField > .fieldInput").value);-->
-<!--          }if (document.querySelector("#eleField > .fieldInput").value != '-' && document.querySelector("#eleField > .fieldInput").value) {-->
-<!--              url.searchParams.set('elevation', document.querySelector("#cmtField > .fieldInput").value);-->
-<!--          }if (document.querySelector("#eleField > .fieldInput").value != '-' && document.querySelector("#eleField > .fieldInput").value) {-->
-<!--              url.searchParams.set('elevation', document.querySelector("#cmtField > .fieldInput").value);-->
-<!--          }-->
-<!--          if (document.querySelector("#eleField > .fieldInput").value != '-' && document.querySelector("#eleField > .fieldInput").value) {-->
-<!--              url.searchParams.set('elevation', document.querySelector("#cmtField > .fieldInput").value);-->
-<!--          }-->
-<!--          if (document.querySelector("#eleField > .fieldInput").value != '-' && document.querySelector("#eleField > .fieldInput").value) {-->
-<!--              url.searchParams.set('elevation', document.querySelector("#cmtField > .fieldInput").value);-->
-<!--          }-->
-<!--          if (document.querySelector("#eleField > .fieldInput").value != '-' && document.querySelector("#eleField > .fieldInput").value) {-->
-<!--              url.searchParams.set('elevation', document.querySelector("#cmtField > .fieldInput").value);-->
-<!--          }-->
-<!--          if (document.querySelector("#eleField > .fieldInput").value != '-' && document.querySelector("#eleField > .fieldInput").value) {-->
-<!--              url.searchParams.set('elevation', document.querySelector("#cmtField > .fieldInput").value);-->
-<!--          }-->
-<!--          if (document.querySelector("#eleField > .fieldInput").value != '-' && document.querySelector("#eleField > .fieldInput").value) {-->
-<!--              url.searchParams.set('elevation', document.querySelector("#cmtField > .fieldInput").value);-->
-<!--          }-->
-<!--          if (document.querySelector("#eleField > .fieldInput").value != '-' && document.querySelector("#eleField > .fieldInput").value) {-->
-<!--              url.searchParams.set('elevation', document.querySelector("#cmtField > .fieldInput").value);-->
-<!--          }-->
-<!--          if (document.querySelector("#eleField > .fieldInput").value != '-' && document.querySelector("#eleField > .fieldInput").value) {-->
-<!--              url.searchParams.set('elevation', document.querySelector("#cmtField > .fieldInput").value);-->
-<!--          }-->
-<!--          -->
-<!--          -->
-<!--          -->
-<!--          -->
-<!--          -->
-<!--          -->
-<!--          -->
-<!--          -->
-<!--          -->
-<!--          url.searchParams.set('time', getValueFromSelector("#timeField > .fieldInput"));-->
-<!--          url.searchParams.set('magneticVariation', getValueFromSelector("#magVarField > .fieldInput"));-->
-<!--          url.searchParams.set('geoidHeight', getValueFromSelector("#geoidHeightField > .fieldInput"));-->
-            console.log('name: ', document.querySelector("#nameField > .fieldInput").value);
+          url.searchParams.set('elevation', document.querySelector("#eleField > .fieldInput").value);
+          url.searchParams.set('time', document.querySelector("#timeField > .fieldInput").value);
+          url.searchParams.set('magneticVariation', document.querySelector("#magVarField > .fieldInput").value);
+          url.searchParams.set('geoidHeight', document.querySelector("#geoidHeightField > .fieldInput").value);
           url.searchParams.set('name', document.querySelector("#nameField > .fieldInput").value);
-<!--          if (document.querySelector("#cmtField > .fieldInput").value != '-' && document.querySelector("#cmtField > .fieldInput").value) {-->
-<!--              url.searchParams.set('comment', document.querySelector("#cmtField > .fieldInput").value);-->
-<!--          }-->
-<!--          url.searchParams.set('comment', getValueFromSelector("#cmtField > .fieldInput"));-->
-<!--          url.searchParams.set('description', getValueFromSelector("#descField > .fieldInput"));-->
-<!--          url.searchParams.set('source', getValueFromSelector("#srcField > .fieldInput"));-->
-<!--          url.searchParams.set('link', getValueFromSelector("#linkField > .fieldInput"));-->
-<!--          url.searchParams.set('symbol', getValueFromSelector("#symField > .fieldInput"));-->
-<!--          url.searchParams.set('type', getValueFromSelector("#typeField > .fieldInput"));-->
-<!--          url.searchParams.set('fix', getValueFromSelector("#fixField > .fieldInput"));-->
-<!--          url.searchParams.set('sat', getValueFromSelector("#satField > .fieldInput"));-->
-<!--          url.searchParams.set('hdop', getValueFromSelector("#hdopField > .fieldInput"));-->
-<!--          url.searchParams.set('vdop', getValueFromSelector("#vdopField > .fieldInput"));-->
-<!--          url.searchParams.set('pdop', getValueFromSelector("#pdopField > .fieldInput"));-->
-<!--          url.searchParams.set('ageOfGPSData', getValueFromSelector("#ageofdgpsdataField > .fieldInput"));-->
-<!--          url.searchParams.set('dgpsid', getValueFromSelector("#dgpsidField > .fieldInput"));-->
+          url.searchParams.set('comment', document.querySelector("#cmtField > .fieldInput").value);
+          url.searchParams.set('description', document.querySelector("#descField > .fieldInput").value);
+          url.searchParams.set('source', document.querySelector("#srcField > .fieldInput").value);
+          url.searchParams.set('link', document.querySelector("#linkField > .fieldInput").value);
+          url.searchParams.set('symbol', document.querySelector("#symField > .fieldInput").value);
+          url.searchParams.set('type', document.querySelector("#typeField > .fieldInput").value);
+          url.searchParams.set('fix', document.querySelector("#fixField > .fieldInput").value);
+          url.searchParams.set('sat', document.querySelector("#satField > .fieldInput").value);
+          url.searchParams.set('hdop', document.querySelector("#hdopField > .fieldInput").value);
+          url.searchParams.set('vdop', document.querySelector("#vdopField > .fieldInput").value);
+          url.searchParams.set('pdop', document.querySelector("#pdopField > .fieldInput").value);
+          url.searchParams.set('ageOfGPSData', document.querySelector("#ageofdgpsdataField > .fieldInput").value);
+          url.searchParams.set('dgpsid', document.querySelector("#dgpsidField > .fieldInput").value);
           url.searchParams.set('extensions', document.querySelector("#extensionsField > .fieldInput").value);
-          console.log(url);
+
+          console.log("url for update wp: ", url);
           fetch(url, {method: 'POST'})
           .then((response) => {
               if (response.ok) {
-                  alert('Изменения успешно сохранены');
-                  return response.text();
-              }
-              console.log('Произошла ошибка при выполнении запроса');
-              // + добавить отображение ошибки на странице
-          })
-          .then((text) => {
-              //document.getElementById('waypointInfo').style.display = 'block';
-              //setChangeMode('field', false);
-              setFieldView();
+                  //console.log("response: ", response.text());
+                  //return response.text();
+                  getGPX()
+                  .then((response) => {
+                      gpx = response;
+                  });
 
-              text = text.replace(/['"]elevation['"]:\s*([\d.,]+)\s*m/, function(match, value) {
-                  return '"elevation":"' + value + '"';
-              });
-              jsonData = JSON.parse(text);
-              //fillInFields();
-              //onCancel();
-              fillAndDisableFields(index);
+                  getGPXCoordinates()
+                  .then((response) => {
+                      gpxCoordinates = response;
+  <!--                    fillAndDisableFields(index);-->
+  <!--                    setFieldView();-->
+                  });
+                  checkWPClick(index);
+                  //fillAndDisableFields(index);
+                  alert('Изменения успешно сохранены');
+              } else {
+                  console.log('Произошла ошибка при выполнении запроса');
+                  // + добавить отображение ошибки на странице
+              }
           })
+<!--          .then((text) => {-->
+<!--              //document.getElementById('waypointInfo').style.display = 'block';-->
+<!--              //setChangeMode('field', false);-->
+<!--              //console.log("JSON text: ", text);-->
+<!--&lt;!&ndash;              text = text.replace(/['"]elevation['"]:\s*([\d.,]+)\s*m/, function(match, value) {&ndash;&gt;-->
+<!--&lt;!&ndash;                  return '"elevation":"' + value + '"';&ndash;&gt;-->
+<!--&lt;!&ndash;              });&ndash;&gt;-->
+<!--              //jsonData = JSON.parse(text);-->
+
+<!--              //setFieldView();-->
+
+<!--              //fillInFields();-->
+<!--              //onCancel();-->
+<!--              -->
+<!--          })-->
           .catch((error) => {
               console.log(error);
               // + добавить отображение ошибки на странице
@@ -496,7 +461,7 @@
         }
 
         function setFieldView() {
-            fillAndDisableFields();
+            //fillAndDisableFields();
             document.getElementById('waypointInfo').style.display = 'block';
             document.getElementById('textView').style.display = 'none';
         }
