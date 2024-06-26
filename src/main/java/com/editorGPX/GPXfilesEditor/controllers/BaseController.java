@@ -10,9 +10,6 @@ public class BaseController {
     @Autowired
     public MainService service;
     public final static String PATH_TO_DIR = "src/main/resources/GPXfiles/uploaded/";
-
-    //private final changeGPXservice changeService = new changeGPXservice();
-//    private final printGPXservice printService = new printGPXservice();
     public BaseController() throws IOException {
     }
 }
