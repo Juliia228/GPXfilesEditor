@@ -197,16 +197,12 @@
                 // + добавить отображение ошибки на странице
             })
             .then((text) => {
-                //document.getElementById('waypointInfo').style.display = 'block';
-                //setChangeMode('field', false);
                 setFieldView();
 
                 text = text.replace(/['"]elevation['"]:\s*([\d.,]+)\s*m/, function(match, value) {
                     return '"elevation":"' + value + '"';
                 });
                 jsonData = JSON.parse(text);
-                //fillInFields();
-                //onCancel();
                 fillAndDisableFields(index);
             })
             .catch((error) => {
@@ -249,7 +245,7 @@
                         }
                     })
                     //console.log("index=", index);
-                    addWaypointToMap(latlng, 'Новая точка', () => checkWPClick(index));
+                    addWaypointToMap(latlng, `It is waypoint №${index}`, () => checkWPClick(index));
                     fillAndDisableFields(index);
                     setFieldView();
                 });
@@ -322,16 +318,11 @@
                 // + добавить отображение ошибки на странице
             })
             .then((text) => {
-                //document.getElementById('waypointInfo').style.display = 'block';
-                //setChangeMode('field', false);
                 setFieldView();
-
                 text = text.replace(/['"]elevation['"]:\s*([\d.,]+)\s*m/, function(match, value) {
                     return '"elevation":"' + value + '"';
                 });
                 jsonData = JSON.parse(text);
-                //fillInFields();
-                //onCancel();
                 fillAndDisableFields(index);
             })
             .catch((error) => {
@@ -391,8 +382,6 @@
           fetch(url, {method: 'POST'})
           .then((response) => {
               if (response.ok) {
-                  //console.log("response: ", response.text());
-                  //return response.text();
                   getGPX()
                   .then((response) => {
                       gpx = response;
@@ -401,8 +390,6 @@
                   getGPXCoordinates()
                   .then((response) => {
                       gpxCoordinates = response;
-  <!--                    fillAndDisableFields(index);-->
-  <!--                    setFieldView();-->
                   });
                   checkWPClick(index);
                   //fillAndDisableFields(index);
@@ -412,31 +399,11 @@
                   // + добавить отображение ошибки на странице
               }
           })
-<!--          .then((text) => {-->
-<!--              //document.getElementById('waypointInfo').style.display = 'block';-->
-<!--              //setChangeMode('field', false);-->
-<!--              //console.log("JSON text: ", text);-->
-<!--&lt;!&ndash;              text = text.replace(/['"]elevation['"]:\s*([\d.,]+)\s*m/, function(match, value) {&ndash;&gt;-->
-<!--&lt;!&ndash;                  return '"elevation":"' + value + '"';&ndash;&gt;-->
-<!--&lt;!&ndash;              });&ndash;&gt;-->
-<!--              //jsonData = JSON.parse(text);-->
-
-<!--              //setFieldView();-->
-
-<!--              //fillInFields();-->
-<!--              //onCancel();-->
-<!--              -->
-<!--          })-->
           .catch((error) => {
               console.log(error);
               // + добавить отображение ошибки на странице
           })
         }
-
-<!--        function getValueFromSelector(selector) {-->
-<!--&lt;!&ndash;            elector&ndash;&gt;-->
-<!--            return (document.querySelector(selector).value != '-' && document.querySelector(selector).value) ? document.querySelector(selector).value : null;-->
-<!--        }-->
 
         // для кнопки Сохранить изменения (в полном текстовом файле)
         function onSaveTextGPX() {
@@ -457,7 +424,33 @@
 
         // для кнопки удалить
         function onDelete() {
-            //
+          const url = new URL('/waypoint/del', BASE_URL);
+          const index = document.getElementById('WPid').value;
+          url.searchParams.set('id', index);
+          fetch(url, {method: 'POST'})
+          .then((response) => {
+              if (response.ok) {
+                  getGPX()
+                  .then((response) => {
+                      gpx = response;
+                  });
+
+                  getGPXCoordinates()
+                  .then((response) => {
+                      gpxCoordinates = response;
+                  });
+                  checkWPClick(index);
+                  //fillAndDisableFields(index);
+                  alert('Изменения успешно сохранены');
+              } else {
+                  console.log('Произошла ошибка при выполнении запроса');
+                  // + добавить отображение ошибки на странице
+              }
+          })
+          .catch((error) => {
+              console.log(error);
+              // + добавить отображение ошибки на странице
+          })
         }
 
         function setFieldView() {
@@ -527,14 +520,14 @@
             const route = L.polyline(rt, {color: 'blue', weight: 6}).addTo(map);
             route.bindPopup(`It is route №${routeIndex}`);
             route.on('click', () => checkClick('route', routeIndex));
-            <!--            rt.forEach((wp) => {-->
-<!--                const index = gpxCoordinates.routes[routeIndex].indexOf(wp);-->
-<!--                addWaypointToMap(wp, `It is waypoint №${index} in route`, () => checkClick('route', index));-->
+                        //rt.forEach((wp) => {
+                //const index = gpxCoordinates.routes[routeIndex].indexOf(wp);
+                //addWaypointToMap(wp, `It is waypoint №${index} in route`, () => checkClick('route', index));
 
-<!--&lt;!&ndash;                const waypoint = L.marker(wp).addTo(map);&ndash;&gt;-->
-<!--&lt;!&ndash;                waypoint.bindPopup(`It is waypoint №${index} in route`);&ndash;&gt;-->
-<!--&lt;!&ndash;                //waypoint.on('click', () => checkWPClick(index));&ndash;&gt;-->
-<!--            });-->
+                //const waypoint = L.marker(wp).addTo(map);
+                //waypoint.bindPopup(`It is waypoint №${index} in route`);
+                //waypoint.on('click', () => checkWPClick(index));
+            //});
         });
 
         gpxCoordinates.tracks?.forEach((trk) => {
